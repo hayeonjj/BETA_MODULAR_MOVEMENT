@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>game</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@100;200;300;400;500;600;700;800;900&family=Xanh+Mono:ital@0;1&display=swap');
+    
+    @font-face {
+        font-family: 'Pilowlava-Atome';
+        src: url('https://raw.githubusercontent.com/hayeonjj/nexus.notexpected/main/gametest/Pilowlava-Atome.woff2') format('woff2');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
+    @font-face {
+        font-family: 'Pilowlava-Regular';
+        src: url('https://raw.githubusercontent.com/hayeonjj/nexus.notexpected/main/gametest/Pilowlava-Regular.woff2') format('woff2');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
+        
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: #F0FFF0;
+            position: relative;
+            font-family: "Gothic A1", sans-serif;
+            font-weight: 900;
+            font-style: normal;
+            user-select: none;
+        }
+        ::selection {
+            background-color:royalblue;
+        }
+        #start-screen {
+            width: 100vw;
+            height: 100vh;
+            background-color: #1c1717;
+            color: #F0FFF0;
+            display: flex;
+            flex-direction: column;
+            z-index: 20;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        #start-screen * {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        #start-screen h1 {
+            font-size: 64px;
+            margin-bottom: 16px;
+
+        }
+        #start-screen p {
+            font-size: 1rem;
+            font-weight: 400;
+            max-width: 500px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        #start-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 18px;
+            font-family: "Gothic A1", sans-serif;
+            font-weight: 900;
+            font-style: normal;
+            z-index: 3;
+            pointer-events: auto;
+            padding: 6px 18px;
+            border: none;
+            outline: none;
+            background-color: #F0FFF0;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+            color: #1c1717;
+            transition: background-color 0.1s ease-in-out, border-radius 0.1s ease-in-out;
+            z-index: 100;
+        }
+        #start-btn:hover {
+            box-shadow: 0 0 10px #666;
+            cursor: pointer;
+        }
+
+        #intro-btn {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            font-size: 18px;
+            font-family: "Gothic A1", sans-serif;
+            font-weight: 900;
+            font-style: normal;
+            z-index: 3;
+            pointer-events: auto;
+            padding: 6px 18px;
+            border: none;
+            outline: none;
+            background-color: #F0FFF0;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+            color: #1c1717;
+            transition: background-color 0.1s ease-in-out, border-radius 0.1s ease-in-out;
+            z-index: 100;
+        }
+        #intro-btn:hover {
+            box-shadow: 0 0 10px #666;
+
+            cursor: pointer;
+        }
+
+        #intro-modal {
+            position: fixed;
+            z-index: 30; 
+            max-width: 24rem;
+            width: 16rem; 
+            padding: 2rem 2.5rem;
+            background: #1c1717cc;
+            color: #F0FFF0;
+            font-size: 0.75rem;
+            font-weight: 800;
+            line-height: 1.75;
+            box-sizing: border-box;
+            border: 1px solid #F0FFF0;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 15px #f0fff080;
+            display: none; 
+            word-break: keep-all;
+            text-align: center;
+            user-select: text;
+        }
+
+        #intro-modal.show {
+            display: block; 
+        }
+
+        /* ======== 단어 선택 화면 ======== */
+        #word-select-screen {
+            width: 100vw;
+            height: 100vh;
+            background-color: #1c1717;
+            color: #F0FFF0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            z-index: 20;
+            user-select: none;
+            padding-top: 120px;
+            box-sizing: border-box;
+        }
+
+
+        #word-numbers {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-width: 600px;
+        
+        }
+
+        .word-number-btn {
+            width: 4rem;
+            height: 4rem;
+            font-size: 1.75rem;
+            font-family: 'Pilowlava-Regular';
+            font-weight: 900;
+            background-color: #F0FFF0;
+            color: #1c1717;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 50%;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+            padding-top: 3.5px;
+        }
+
+
+        #selected-words {
+
+            min-height: 60px;
+            max-width: 600px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            line-height: 1.4;
+        }
+
+        #game-start-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 18px;
+            font-family: "Gothic A1", sans-serif;
+            font-weight: 900;
+            font-style: normal;
+            z-index: 3;
+            pointer-events: auto;
+            padding: 6px 18px;
+            border: none;
+            outline: none;
+            background-color: #F0FFF0;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+            color: #1c1717;
+            transition: background-color 0.1s ease-in-out, border-radius 0.1s ease-in-out;
+            z-index: 100;
+        }
+
+        #game-start-btn:hover {
+            box-shadow: 0 0 10px #666;
+            cursor: pointer;
+        }
+
+        #game-start-btn:disabled {
+            background-color: #1c171740;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+
+        #interactive-title-container {
+            width: 100%;
+            height: 100%; 
+            padding: 0;
+            position: absolute; 
+            display: flex; align-items: flex-end; 
+            justify-content: center; 
+        }
+
+        #interactive-title {
+            height: 10rem; 
+            display: flex;
+            justify-content: end; 
+            cursor: pointer;
+            row-gap: min(16px, 0.5vw);
+            column-gap: min(16px, 1vw);
+            bottom: 20px;
+            position: absolute;
+            align-items: left;
+            flex-direction: column;
+        }
+
+        .title-tile {
+            font-family: 'Pilowlava-Atome'; 
+            width: min(11.585vw, 11.585vw);
+            height: min(11.585vw, 11.585vw); 
+            background: #F0FFF0; 
+            color: #111; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: min(122px, 9vw); 
+            border-radius: min(18px, 1.2vw); 
+            flex-shrink: 0; 
+            /*box-sizing: border-box; */
+            position: relative; 
+            z-index: 1; 
+            user-select: none; 
+            transition: transform 0.5s ease-in-out;
+            line-height: 1; 
+            padding-top: 7.5px;
+        }
+
+
+        .title-tile:hover{
+            animation: jelly 0.5s;
+        }
+
+        /* ======== 게임 화면 ======== */
+        #game-root {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+        }
+        #finish-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right:0; bottom: 0;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        #finish-modal .modal-content {
+            width: 100%; 
+            height: 100%;
+            background: transparent;
+            color: #F0FFF0;
+            padding: 28px 36px;
+            width: 100vw;
+            height: 100vh;
+            text-align: center;
+            z-index: 10;
+            display: flex;
+            flex-direction: column; 
+            justify-content: center; 
+            padding-bottom: 16vh;
+        }
+
+        #finish-modal canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; 
+            background-color: #1c1717;
+        }
+        #finish-word {
+            display: flex;
+            gap: 8px;
+            margin-top: 20px;
+            justify-content: center;
+            text-align: center;
+            color: #F0FFF0;
+            z-index: 20;
+    
+            
+        }
+
+        #restart-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 18px;
+            font-family: "Gothic A1", sans-serif;
+            font-weight: 900;
+            font-style: normal;
+            z-index: 3;
+            pointer-events: auto;
+            padding: 6px 18px;
+            border: none;
+            outline: none;
+            background-color: #F0FFF0;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+            color: #1c1717;
+            transition: background-color 0.1s ease-in-out, border-radius 0.1s ease-in-out;
+            z-index: 100;        
+        }
+        #restart-btn:hover {
+
+            color: #222;
+            -webkit-transition: .3s ease-in-out;
+            transition: .3s ease-in-out;
+            cursor: pointer;
+        }
+
+        #top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            z-index: 2;
+            pointer-events: none;
+        }
+        #timer {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            font-size: 18px;
+            color: #F0FFF0;
+            z-index: 3;
+            pointer-events: auto;
+            padding: 6px 18px;
+            background-color: #222;
+            border: 1px solid #1c171740;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+            font-family: "Gothic A1", sans-serif;
+            font-weight: 900;
+            font-style: normal;
+        }
+        #finish-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 18px;
+            font-family: "Gothic A1", sans-serif;
+            font-weight: 900;
+            font-style: normal;
+            z-index: 3;
+            pointer-events: auto;
+            padding: 6px 18px;
+            border: none;
+            outline: none;
+            background-color: #F0FFF0;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+            color: #1c1717;
+            transition: background-color 0.1s ease-in-out, border-radius 0.1s ease-in-out;
+            z-index: 100;
+        }
+        #finish-btn:hover {
+            box-shadow: 0 0 10px #666;
+            cursor: pointer;
+        }
+
+        #make-area-outer {
+            flex: 1 1 auto;
+            width: 100vw;
+            height: calc(100vh - 160px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+            cursor: grab;
+        }
+        #make-area-slots-scroll {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            transition: scroll-left 0.2s;
+            overflow: visible;
+            position: relative;
+        }
+        #make-area-slots {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            padding: 20px 40px;
+            min-height: 1px;
+            min-width: 1px;
+        }
+        .letter-slot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            height: 150px;
+            background: #F0FFF0;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .letter-slot .area { 
+            position: absolute; 
+            border-radius: 6px; 
+            min-width: 50px; min-height: 50px; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .area.choseong { top: 20px; left: 20px; width: 50px; height: 50px; }
+        .area.jungseong { top: 20px; left: 80px; width: 50px; height: 50px; }
+        .area.jongseong { top: 80px; left: 50px; width: 50px; height: 50px; }
+
+        .letter-slot .tile-in-slot {
+            width: 50px; height: 50px; border-radius: 6px; color:#1c1717; background: #F0FFF0; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0; cursor: grab; user-select: none; position: relative;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+        .letter-index {
+            position: absolute;
+            left: 8px;
+            top: 8px;
+            font-size: 14px;
+            font-weight: 900;
+            color: #F0FFF0;
+        }
+        #random-tiles-outer {
+            width: 100vw;
+            height: 120px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            align-items: flex-end;
+            z-index: 2;
+            pointer-events: auto;
+            background: linear-gradient(to top, #333 30%, rgba(0, 0, 0, 0));
+            overflow-x: auto;
+        }
+        #random-tiles {
+            min-width: 1px;
+            padding: 0 16px 20px 16px;
+            background: none;
+            border: none;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+            pointer-events: auto;
+            gap: 8px;
+            height: 92px;
+        }
+        .tile {
+            width: 50px; height: 50px;
+            border-radius: 6px; background: #F0FFF0; 
+            display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0; cursor: grab; position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: box-shadow 0.1s;
+            flex-shrink: 0;
+            color: #1c1717;
+        }
+
+        .tile:hover{
+            cursor: pointer;
+            box-shadow: 0 0 10px #666;
+            animation: jelly 0.5s;
+
+        }
+        .tile.dragging, .tile-in-slot.dragging { opacity: 0.5; box-shadow: none; border:none; }
+        .area.dragover {
+            background: #1c171740;
+        }
+
+        #make-area-slots::-webkit-scrollbar, 
+        #make-area-slots-scroll::-webkit-scrollbar, 
+        body::-webkit-scrollbar {
+            display: none;
+            width: 0;
+            background: none;
+        }
+
+        #random-tiles-outer::-webkit-scrollbar {
+            height: 12px; 
+        }
+        #random-tiles-outer::-webkit-scrollbar-track {
+            background: #888; 
+        }
+        #random-tiles-outer::-webkit-scrollbar-thumb {
+            background-color: #F0FFF0; 
+        }
+
+        #add-slot-btn {
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            color: #888;
+            background-color: #1c171740;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: background-color 0.2s;
+        }
+        #add-slot-btn:hover {
+            background-color: #888;
+            color: #F0FFF0;
+            cursor: pointer;
+        }
+
+        @keyframes jelly {
+        25% {
+            transform: scale(0.95, 1.05);
+        }
+
+        50% {
+            transform: scale(1.05, 0.95);
+        }
+
+        75% {
+            transform: scale(0.975, 1.025);
+        }
+        }
+        @media (min-width: 1200px) { 
+            #random-tiles-outer { justify-content: center;}
+            #intro-modal {font-size: 0.8rem;}
+        }
+    </style>
+
+</head>
+<body>
+<div id="start-screen">
+    <button id="start-btn">게임 시작</button>
+    <button id="intro-btn">?</button>
+    <div id="interactive-title-container">
+        <div id="interactive-title">
+            </div>
+    </div>
+</div>
+
+<div id="word-select-screen"> 
+    <div id="selected-words">
+    </div>
+    <div id="word-numbers">
+    </div>
+    <button id="game-start-btn" disabled>▶</button>
+</div>
+
+<div id="intro-modal">
+    인터넷 밈 조각을 드래그하여 새로운 나만의 텍스트를 커스텀 해보세요. 편향된 밈은 언제든 당신의 손에서 재탄생할 준비가 되었습니다. 
+    <br><br>
+    타일 조각이 된 한글 자모를 이곳 저곳 옮길 수 있고, 플레이는 마우스 조작만으로 충분합니다. 
+    <br><br>
+    2분 동안 펼쳐지는 보드에서 흥미로운 결합을 시도하고 친구들에게 공유해 보세요!
+
+</div>
+<div id="game-root">
+    <div id="top-bar">
+    <div id="timer">남은 시간: 02:00</div>
+    <button id="finish-btn">종료</button>
+    </div>
+    <div id="make-area-outer">
+    <div id="make-area-slots-scroll">
+        <div id="make-area-slots"></div>
+    </div>
+    </div>
+    <div id="random-tiles-outer">
+    <div id="random-tiles"></div>
+    </div>
+    <div id="finish-modal">
+    <canvas id="confetti-canvas"></canvas>
+    <div class="modal-content">
+        <h3></h3>
+        <div id="finish-word"></div>
+        <button id="restart-btn" onclick="location.reload()">다시 시작</button>
+    </div>
+</div>
+
+<script>
+    const choseongList = ["ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
+    const jungseongList = ["ㅏ", "ㅐ", "ㅑ", "ㅒ", "ㅓ", "ㅔ", "ㅕ", "ㅖ", "ㅗ", "ㅛ", "ㅜ", "ㅟ", "ㅠ", "ㅡ", "ㅢ", "ㅣ"];
+    const jongseongList = ["","ㄴ","ㅇ","ㄹ","ㅁ","ㅈ","ㄱ","ㄲ","ㅂ"];
+
+    // [추가] 단어 목록 정의
+    const wordList = [
+        "된장녀", "꼴페미", "개념녀", "김여사", "오우야", 
+        "아몰랑", "김치녀", "상폐녀", "햄최몇", "맘충", 
+        "앙기모띠", "메퇘지", "쿵쾅이", "설거지론", "피싸개", 
+        "수진이", "뷔페미니즘", "혜지", "위민 커피 이모지", "오또케", 
+        "제육이나 볶아온나", "해줘", "집게손가락", "퐁퐁남", "계집신조"
+    ];
+
+    //  선택된 단어들에서 자모 추출
+    function extractJamoFromWords(words) {
+        const allTiles = [];
+        const stdChoseong = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
+        const stdJungseong = ['ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ', 'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ'];
+        const stdJongseong = ['', 'ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄹ', 'ㄺ', 'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', 'ㄿ', 'ㅀ', 'ㅁ', 'ㅂ', 'ㅄ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
+
+        words.forEach(word => {
+            for (const char of word) {
+                if (char >= '가' && char <= '힣') {
+                    const code = char.charCodeAt(0) - 0xAC00;
+                    const cIdx = Math.floor(code / (21 * 28));
+                    const jIdx = Math.floor((code % (21 * 28)) / 28);
+                    const jgIdx = code % 28;
+
+                    allTiles.push({type:"초성", val:stdChoseong[cIdx]});
+                    allTiles.push({type:"중성", val:stdJungseong[jIdx]});
+                    if (jgIdx > 0) {
+                        allTiles.push({type:"종성", val:stdJongseong[jgIdx]});
+                    }
+                }
+            }
+        });
+
+        return allTiles;
+    }
+
+    // 선택된 단어로만 타일 생성
+    function getRandomTilesFromWords(selectedWords, n) {
+        const wordTiles = extractJamoFromWords(selectedWords);
+        let arr = [...wordTiles];
+        let res = [];
+        
+        while(res.length < n && arr.length > 0) {
+            let idx = Math.floor(Math.random() * arr.length);
+            res.push(arr[idx]);
+            arr.splice(idx, 1);
+        }
+        
+        return res;
+    }
+
+    let tileIdSeq = 1;
+    let myTiles = []; 
+
+
+    let selectedWordNumbers = [];
+    let selectedWords = [];
+
+
+    function initWordSelectScreen() {
+        const wordNumbers = document.getElementById('word-numbers');
+        wordNumbers.innerHTML = '';
+        
+        for (let i = 1; i <= 25; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'word-number-btn';
+            btn.textContent = i;
+            btn.dataset.number = i;
+            btn.onclick = () => toggleWordSelection(i, btn);
+            wordNumbers.appendChild(btn);
+        }
+        
+        updateSelectedWordsDisplay();
+    }
+
+    function toggleWordSelection(number, btnElement) {
+        const hoverColors = ['#beff00', '#ffdcff', '#FF1E19'];
+        
+        if (selectedWordNumbers.includes(number)) {
+            selectedWordNumbers = selectedWordNumbers.filter(n => n !== number);
+            selectedWords = selectedWords.filter(w => w !== wordList[number - 1]);
+            btnElement.classList.remove('selected');
+            btnElement.style.backgroundColor = '#F0FFF0'; // 원래 색상으로 복원
+        } else {
+            // 새로 선택
+            selectedWordNumbers.push(number);
+            selectedWords.push(wordList[number - 1]);
+            btnElement.classList.add('selected');
+            
+            // 랜덤 색상 적용
+            const randomColor = hoverColors[Math.floor(Math.random() * hoverColors.length)];
+            btnElement.style.backgroundColor = randomColor;
+        }
+        
+        updateSelectedWordsDisplay();
+        updateGameStartButton();
+    }
+
+
+    function updateSelectedWordsDisplay() {
+        const display = document.getElementById('selected-words');
+        if (selectedWords.length === 0) {
+            display.textContent = '새로운 형태로 만들 인터넷 밈을 원하는 만큼 선택하세요.';
+        } else {
+            display.innerHTML = `<strong></strong> ${selectedWords.join(', ')}`;
+        }
+    }
+
+    function updateGameStartButton() {
+        const btn = document.getElementById('game-start-btn');
+        btn.disabled = selectedWords.length === 0;
+    }
+
+    const maxLetterCount = 6;
+    let visibleSlotCount = 2; // 처음 보여줄 슬롯 개수
+    const makeAreaSlots = []; 
+
+    for(let i=0;i<maxLetterCount;i++) {
+        makeAreaSlots.push({
+            choseong: null,
+            jungseong: null,
+            jongseong: null
+        });
+    }
+
+    // ===== 렌더링 함수 =====
+    function renderRandomTiles() {
+        const el = document.getElementById('random-tiles');
+        el.innerHTML = "";
+        myTiles.forEach(tile => {
+            const div = document.createElement('div');
+            div.className = 'tile';
+            div.draggable = true;
+            div.dataset.id = tile.id;
+            div.dataset.type = tile.type;
+            div.dataset.val = tile.val;
+            div.innerText = tile.val;
+            div.title = tile.type;
+            el.appendChild(div);
+        });
+    }
+
+    function renderTileInSlot(tile) {
+        const tileDiv = document.createElement('div');
+        tileDiv.className = 'tile-in-slot tile';
+        tileDiv.draggable = true;
+        tileDiv.dataset.id = tile.id;
+        tileDiv.dataset.type = tile.type;
+        tileDiv.dataset.val = tile.val;
+        tileDiv.title = tile.type;
+        tileDiv.innerText = tile.val;
+        return tileDiv.outerHTML;
+    }
+
+    function renderMakeArea() {
+        const area = document.getElementById('make-area-slots');
+        area.innerHTML = "";
+
+        for (let i = 0; i < visibleSlotCount; i++) {
+            const slot = makeAreaSlots[i];
+            const slotDiv = document.createElement('div');
+            slotDiv.className = 'letter-slot';
+            slotDiv.dataset.idx = i;
+
+            const idxLabel = document.createElement('div');
+            idxLabel.className = 'letter-index';
+            idxLabel.innerText = i + 1;
+            slotDiv.appendChild(idxLabel);
+
+            const cDiv = document.createElement('div');
+            cDiv.className = 'area choseong';
+            cDiv.dataset.slot = i;
+            cDiv.dataset.area = 'choseong';
+            if (slot.choseong) cDiv.innerHTML = renderTileInSlot(slot.choseong);
+            slotDiv.appendChild(cDiv);
+
+            const jDiv = document.createElement('div');
+            jDiv.className = 'area jungseong';
+            jDiv.dataset.slot = i;
+            jDiv.dataset.area = 'jungseong';
+            if (slot.jungseong) jDiv.innerHTML = renderTileInSlot(slot.jungseong);
+            slotDiv.appendChild(jDiv);
+
+            const jgDiv = document.createElement('div');
+            jgDiv.className = 'area jongseong';
+            jgDiv.dataset.slot = i;
+            jgDiv.dataset.area = 'jongseong';
+            if (slot.jongseong) jgDiv.innerHTML = renderTileInSlot(slot.jongseong);
+            slotDiv.appendChild(jgDiv);
+
+            area.appendChild(slotDiv);
+        }
+        
+
+        if (visibleSlotCount < maxLetterCount) {
+            const addBtn = document.createElement('div');
+            addBtn.id = 'add-slot-btn';
+            addBtn.innerText = '+';
+            addBtn.onclick = () => {
+                visibleSlotCount++;
+                renderMakeArea(); 
+                setEventListeners();
+            };
+            area.appendChild(addBtn);
+        }
+        setEventListeners();
+    }
+
+    // ===== 이벤트 리스너 설정 =====
+    function setEventListeners() {
+        document.querySelectorAll('.tile').forEach(tileDiv => {
+            tileDiv.ondragstart = handleDragStart;
+            tileDiv.ondragend = handleDragEnd;
+        });
+        document.querySelectorAll('.area').forEach(areaDiv => {
+            areaDiv.ondragover = handleDragOver;
+            areaDiv.ondragleave = handleDragLeave;
+            areaDiv.ondrop = handleDropOnSlot;
+        });
+        
+        // 하단 타일 영역으로 복귀 이벤트
+        const randomTilesOuter = document.getElementById('random-tiles-outer');
+        randomTilesOuter.ondragover = handleDragOver;
+        randomTilesOuter.ondrop = handleDropOnRandomArea;
+    }
+
+    // ===== 드래그 & 드롭 핸들러 함수 =====
+    function handleDragStart(e) {
+        e.target.classList.add('dragging');
+        const parent = e.target.parentElement;
+        const originInfo = {};
+
+        if (parent.id === 'random-tiles') {
+            originInfo.from = 'random';
+        } else if (parent.classList.contains('area')) {
+            originInfo.from = 'slot';
+            originInfo.idx = parseInt(parent.dataset.slot);
+            originInfo.area = parent.dataset.area;
+        }
+        
+        const tileData = {
+            id: parseInt(e.target.dataset.id),
+            type: e.target.dataset.type,
+            val: e.target.dataset.val,
+            origin: originInfo
+        };
+        
+        e.dataTransfer.setData('application/json', JSON.stringify(tileData));
+        e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragEnd(e) {
+        e.target.classList.remove('dragging');
+        document.querySelectorAll('.area.dragover').forEach(a => a.classList.remove('dragover'));
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        if (e.currentTarget.classList.contains('area')) {
+            e.currentTarget.classList.add('dragover');
+        }
+    }
+
+    function handleDragLeave(e) {
+        if (e.currentTarget.classList.contains('area')) {
+            e.currentTarget.classList.remove('dragover');
+        }
+    }
+
+    function handleDropOnSlot(e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('dragover');
+        
+        const data = JSON.parse(e.dataTransfer.getData('application/json'));
+        if (!data) return;
+
+        const { id, type, val, origin } = data;
+        const tile = { id, type, val };
+
+        const toIdx = parseInt(e.currentTarget.dataset.slot);
+        const toArea = e.currentTarget.dataset.area;
+
+        if ((toArea === 'choseong' && !choseongList.includes(val)) || 
+            (toArea === 'jungseong' && !jungseongList.includes(val)) || 
+            (toArea === 'jongseong' && !jongseongList.includes(val))) {
+            return;
+        }
+
+        if (makeAreaSlots[toIdx][toArea]) {
+            myTiles.push(makeAreaSlots[toIdx][toArea]);
+        }
+        
+        if (origin.from === 'random') {
+            myTiles = myTiles.filter(t => t.id !== id);
+        } else if (origin.from === 'slot') {
+            makeAreaSlots[origin.idx][origin.area] = null;
+        }
+
+        makeAreaSlots[toIdx][toArea] = tile;
+        renderAll();
+    }
+
+    function handleDropOnRandomArea(e) {
+        e.preventDefault();
+        const data = JSON.parse(e.dataTransfer.getData('application/json'));
+        if (!data || data.origin.from !== 'slot') return;
+        
+        const { id, type, val, origin } = data;
+        const tile = { id, type, val };
+
+        makeAreaSlots[origin.idx][origin.area] = null;
+        myTiles.push(tile);
+        renderAll();
+    }
+
+
+
+    function createInteractiveTitle() {
+        const container = document.getElementById('interactive-title');
+        container.innerHTML = '';
+        
+        const words = [
+            { text: 'beta', color: '#beff00', textColor: '#556982' },
+            { text: 'modular', color: '#0096FF', textColor: '#f1f1f1' },
+            { text: 'movement', color: '#B2FFFF', textColor: '#FF1E19' }
+        ];
+        
+        words.forEach(word => {
+            const lineDiv = document.createElement('div');
+            lineDiv.style.display = 'flex';
+            lineDiv.style.gap = 'min(14px, 0.6vw)';
+            
+            for (const char of word.text) {
+                const tileDiv = document.createElement('div');
+                tileDiv.className = 'title-tile';
+                tileDiv.innerText = char.toUpperCase();
+                
+
+                tileDiv.style.backgroundColor = word.color;
+                tileDiv.style.color = word.textColor; 
+                
+                tileDiv.dataset.originalColor = word.color;
+                tileDiv.dataset.originalTextColor = word.textColor; 
+                lineDiv.appendChild(tileDiv);
+            }
+            
+            container.appendChild(lineDiv);
+        });
+        
+        container.addEventListener('click', shuffleTiles);
+    }
+
+    function shuffleTiles() {
+        const container = document.getElementById('interactive-title');
+        const tiles = Array.from(container.querySelectorAll('.title-tile'));
+        
+        const tileData = tiles.map(tile => ({
+            text: tile.innerText,
+            color: tile.dataset.originalColor,
+            textColor: tile.dataset.originalTextColor 
+        }));
+        
+        for (let i = tileData.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [tileData[i], tileData[j]] = [tileData[j], tileData[i]];
+        }
+        
+        tiles.forEach((tile, index) => {
+            tile.innerText = tileData[index].text;
+            tile.style.backgroundColor = tileData[index].color;
+            tile.style.color = tileData[index].textColor; 
+        });
+    }
+
+    createInteractiveTitle('beta modular movement');
+
+    let animFrame = null;
+    let posX = 0, posY = 0;
+    let velocityX = 0, velocityY = 0;
+    let boxActive = false;
+    const BALL_SPEED = 0.5; // 속도
+
+    function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function pickVelocity(speed) {
+        let angle;
+        do {
+            angle = randomInRange(0, 2 * Math.PI);
+        } while (Math.abs(Math.cos(angle)) < 0.3 || Math.abs(Math.sin(angle)) < 0.3);
+        return { vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed };
+    }
+
+    function moveIntroModal() {
+        if (!boxActive) return;
+        const introModal = document.getElementById('intro-modal');
+        const winW = window.innerWidth;
+        const winH = window.innerHeight;
+        const boxWidth = introModal.offsetWidth;
+        const boxHeight = introModal.offsetHeight;
+
+        let nextX = posX + velocityX;
+        let nextY = posY + velocityY;
+
+        if (nextX < 0) { nextX = 0; velocityX = -velocityX; }
+        else if (nextX + boxWidth > winW) { nextX = winW - boxWidth; velocityX = -velocityX; }
+        if (nextY < 0) { nextY = 0; velocityY = -velocityY; }
+        else if (nextY + boxHeight > winH) { nextY = winH - boxHeight; velocityY = -velocityY; }
+
+        posX = nextX;
+        posY = nextY;
+        introModal.style.left = Math.round(posX) + 'px';
+        introModal.style.top = Math.round(posY) + 'px';
+        animFrame = requestAnimationFrame(moveIntroModal);
+    }
+
+    function showIntroModal() {
+        const introModal = document.getElementById('intro-modal');
+        introModal.classList.add('show');
+        
+        const boxWidth = introModal.offsetWidth;
+        const boxHeight = introModal.offsetHeight;
+        const winW = window.innerWidth;
+        const winH = window.innerHeight;
+
+        posX = Math.round(randomInRange(0, winW - boxWidth));
+        posY = Math.round(randomInRange(0, winH - boxHeight));
+        
+        const v = pickVelocity(BALL_SPEED);
+        velocityX = v.vx;
+        velocityY = v.vy;
+
+        introModal.style.left = posX + 'px';
+        introModal.style.top = posY + 'px';
+        boxActive = true;
+        if (animFrame) cancelAnimationFrame(animFrame);
+        animFrame = requestAnimationFrame(moveIntroModal);
+    }
+
+    function hideIntroModal() {
+        const introModal = document.getElementById('intro-modal');
+        introModal.classList.remove('show');
+        boxActive = false;
+        if (animFrame) cancelAnimationFrame(animFrame);
+    }
+
+    function toggleIntroModal() {
+        const introModal = document.getElementById('intro-modal');
+        if (introModal.classList.contains('show')) {
+            hideIntroModal();
+        } else {
+            showIntroModal();
+        }
+    }
+    createInteractiveTitle('beta modular');
+    setupDragToScroll(document.getElementById('interactive-title-container'), document.getElementById('interactive-title-container'));
+
+    // ===== 초기화 및 전체 렌더링 =====
+    function renderAll() {
+        renderRandomTiles();
+        renderMakeArea();
+    }
+
+        // 게임 시작
+    const startScreen = document.getElementById('start-screen');
+    const wordSelectScreen = document.getElementById('word-select-screen'); // [추가]
+    const gameRoot = document.getElementById('game-root');
+    const startBtn = document.getElementById('start-btn');
+    const introBtn = document.getElementById('intro-btn'); 
+    const introModal = document.getElementById('intro-modal'); 
+    let timerInt; 
+
+    introBtn.onclick = toggleIntroModal;
+
+    startBtn.onclick = function() {
+        startScreen.style.display = 'none';
+        wordSelectScreen.style.display = 'flex';
+        
+
+        hideIntroModal();
+        
+        initWordSelectScreen();
+    };
+
+
+
+
+    document.getElementById('game-start-btn').onclick = function() {
+        if (selectedWords.length === 0) return;
+        
+
+        wordSelectScreen.style.display = 'none';
+        gameRoot.style.display = 'flex';
+
+
+        myTiles = getRandomTilesFromWords(selectedWords, 30).map(tile => ({...tile, id: tileIdSeq++ }));
+
+        // ===== 게임 시작 로직 =====
+
+
+        renderAll();
+        setupDragToScroll(document.getElementById('make-area-slots-scroll'), document.getElementById('make-area-outer'));
+        setupDragToScroll(document.getElementById('random-tiles-outer'), document.getElementById('random-tiles-outer'));
+
+
+        let timeLeft = 120;
+        const timerEl = document.getElementById('timer');
+        timerInt = setInterval(() => {
+            timeLeft--;
+            const min = String(Math.floor(timeLeft / 60)).padStart(1, "0");
+            const sec = String(timeLeft % 60).padStart(1, "0");
+            timerEl.innerText = "남은 시간: " + min + ":" + sec;
+            if (timeLeft <= 0) finishGame();
+        }, 1000);
+    };
+
+
+    // ===== 게임 종료 =====
+    document.getElementById('finish-btn').onclick = finishGame;
+
+    function finishGame() {
+        clearInterval(timerInt);
+        document.getElementById('random-tiles-outer').style.display = 'none';
+        document.getElementById('finish-modal').style.display = 'flex';
+        document.getElementById('finish-btn').style.display = 'none';
+
+        startConfetti();
+
+        const stdChoseong = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
+        const stdJungseong = ['ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ', 'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ'];
+        const stdJongseong = ['', 'ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄹ', 'ㄺ', 'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', 'ㄿ', 'ㅀ', 'ㅁ', 'ㅂ', 'ㅄ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
+
+        const fw = document.getElementById('finish-word');
+        fw.innerHTML = "";
+        let completedWord = "";
+
+        makeAreaSlots.forEach(slot => {
+            if (slot.choseong && slot.jungseong) {
+                const cIdx = stdChoseong.indexOf(slot.choseong.val);
+                const jIdx = stdJungseong.indexOf(slot.jungseong.val);
+                const jgIdx = slot.jongseong ? stdJongseong.indexOf(slot.jongseong.val) : 0;
+
+                if (cIdx !== -1 && jIdx !== -1 && jgIdx !== -1) {
+                    const uni = 0xAC00 + (cIdx * 21 * 28) + (jIdx * 28) + jgIdx;
+                    const letter = String.fromCharCode(uni);
+                    fw.innerHTML += `<span style="font-size:36px;">${letter}</span>`;
+                    completedWord += letter;
+                }
+            }
+        });
+
+        if (completedWord) {
+            fetch('/api/tweet', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ word: completedWord }),
+            })
+            .then(response => response.json())
+            .then(data => console.log(data.message))
+            .catch(error => console.error('트윗 요청 실패:', error));
+        }
+    }
+
+    // ===== 버튼 호버 시 랜덤 색상 적용 =====
+    const hoverColors = ['#beff00', '#ffdcff', '#FF1E19'];
+
+    function applyRandomHoverEffect(element) {
+
+        element.addEventListener('mouseenter', () => {
+            const randomColor = hoverColors[Math.floor(Math.random() * hoverColors.length)];
+            element.style.backgroundColor = randomColor;
+        });
+
+
+        element.addEventListener('mouseleave', () => {
+            element.style.backgroundColor = ''; 
+        });
+    }
+
+    const staticButtons = document.querySelectorAll('#start-btn, #intro-btn, #finish-btn, #restart-btn, #game-start-btn');
+    staticButtons.forEach(btn => applyRandomHoverEffect(btn));
+
+    function setupDragToScroll(element, container) {
+        let isDragging = false;
+        let startX = 0;
+        let scrollLeft = 0;
+
+        element.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.pageX - element.offsetLeft;
+            scrollLeft = element.scrollLeft;
+        });
+
+        element.addEventListener('mouseleave', () => {
+            isDragging = false;
+        });
+
+        element.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        element.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - element.offsetLeft;
+            const walk = (x - startX) * 2;
+            element.scrollLeft = scrollLeft - walk;
+        });
+    }
+
+    let animationFrameId = null; 
+
+
+    function startConfetti() {
+        const canvas = document.getElementById("confetti-canvas");
+        if (!canvas) return;
+
+        const ctx = canvas.getContext("2d");
+        let particles = []; 
+        
+        const confettiColors = ['#beff00', '#556982', '#DC0464','#ffdcff', '#B2FFFF', '#FF1E19' ];
+        
+
+        let allowRespawn = true;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
+
+        function createParticle() {
+            const color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                size: Math.random() * 6 + 3,
+                speedX: (Math.random() - 0.5) * 4,
+                speedY: Math.random() * 4 + 2,
+                rotation: (Math.random() - 0.5) * 5,
+                color: color
+            });
+        }
+
+        function updateParticle(particle) {
+            particle.x += particle.speedX;
+            particle.y += particle.speedY;
+            particle.x += Math.sin(particle.y * 0.1) * Math.random() * 0.5;
+
+
+            if (particle.y > canvas.height + 20) {
+                if (allowRespawn) {
+                    particle.y = Math.random() * canvas.height - canvas.height;
+                    particle.x = Math.random() * canvas.width;
+                }
+            }
+        }
+
+        function drawParticle(particle) {
+            ctx.save();
+            ctx.translate(particle.x, particle.y);
+            ctx.rotate(particle.rotation);
+            ctx.fillStyle = particle.color;
+            ctx.fillRect(-particle.size, -particle.size / 4, particle.size * 2, particle.size / 2);
+            ctx.restore();
+        }
+        
+        for (let i = 0; i < 200; i++) {
+            createParticle();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(updateParticle);
+            
+
+            particles = particles.filter(p => p.y <= canvas.height + 20);
+
+            particles.forEach(drawParticle);
+
+            if (particles.length === 0) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+                return;
+            }
+
+            animationFrameId = requestAnimationFrame(animate);
+        }
+
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+        animate();
+        
+        const confettiGracefulStopDuration = 6000; 
+
+        setTimeout(() => {
+            allowRespawn = false; 
+        }, confettiGracefulStopDuration);
+}    
+</script>
+</body>
+</html>
